@@ -51,7 +51,7 @@ with open('late.data', 'r') as f:
 
         site_list.append(site)
 
-print('=======================================================================\n')
+print('=============================\n')
 
 sorted_list = sorted(site_list, key=lambda e: e.r)
 for site in sorted_list:
