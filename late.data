@@ -1,4 +1,6 @@
 # name  hy  sz  b  l  hz
+mjolnir 1 1 2
+nereus 1 1 2
 moon1 1 6 1 1 0 p
 moon2 0 6 1 1 0 p
 apophis 0 1 2 0 0
@@ -40,4 +42,5 @@ tithonus 2 1 4 0 0
 awneas 3 2 5 0 0
 churyumov- 4 1 3
 asgard 4 6 7 1 p
+chaucer 2 1 3 g
 # name  hy  sz  b  l  hz
