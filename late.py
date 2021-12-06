@@ -54,5 +54,6 @@ with open('late.data', 'r') as f:
 print('=============================\n')
 
 sorted_list = sorted(site_list, key=lambda e: e.r)
-for site in sorted_list:
-    print(f'{site.name:10s} {" PG"[site.gp]} {site.r:7.3f}   n = {site.n:2d}')
+for s in sorted_list:
+    print(f'{s.name:10s} {" PG"[s.gp]} {s.r:7.3f}   n = {s.n:2d} ><'
+          f'  hy= {s.hy:1.0f}  sz= {s.sz:1.0f}  b= {s.b:2.0f}   l= {s.l:.1f}   hz= {s.hz:1.0f}')
