@@ -36,10 +36,14 @@ with open('late.data', 'r') as f:
                 if c in 'gp':
                     assert gp == 0, f'GP error in line: {line}'
                     if c == 'g':
-                        gp = 2
+                        gp = 2 # group
                     else:
-                        gp = 1
+                        gp = 1 # prospect
                     site.gp = gp
+                elif c == 'a': # aerobrake
+                    l -= .5
+                elif c =='z': # hazard on aero
+                    l += .5
 
         # r = sqrt((1 + sz + g) / ((6 - hy) * (b + 4 * l + 4 * hz)))
         r = sqrt(sz + gp) / sqrt((6 - hy) * (b + 1 + 4 * l + 4 * hz))
