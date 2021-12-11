@@ -1,4 +1,5 @@
 # name  hy  sz  b  l  hz
+skamandrios 3 1 5
 mjolnir 1 1 2
 nereus 1 1 2
 moon1 1 6 1 1 0 p
@@ -20,6 +21,7 @@ aegis-m 3 1 4 0  0 g
 davida 2 5 4 0 1
 fortuna 2 5 4 0  0 g
 achilles 3 2 5 0 0
+hektor 3 3 5 0 1
 flora 1 4 3 0  0 g
 cruithne 1 1 5 0 0
 phoebe 4 3 6 0  0 g
@@ -50,4 +52,9 @@ leda 2 1 4 g
 nysa 0 3 3 0 1 g
 psyche 1 5 3 0 1
 valhalla 4 6 7 1 p
+saturn 0 6 14 4 1 aa
+icarion 3 1 4 0 0 g
+nestor 3 2 4 g
+telamon 2 3 4 g
+philoctetes 2 1 4 g
 # name  hy  sz  b  l  hz
