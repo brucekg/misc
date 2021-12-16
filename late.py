@@ -3,8 +3,10 @@ from aobj import AObj
 
 # Landing Burn Factor
 LK = 4
-# Aerobrake/Hazard Factor
-AZK = 2
+# Aerobrake
+AK = 2
+# Hazard Factor
+ZK = 4
 
 def print_list(li):
     for s in li:
@@ -40,11 +42,12 @@ with open('late.data', 'r') as f:
 
         hy, sz, b, l, hz = values
         gp = 0
-        az = 0
+        a = 0
+        z = 0
         mods = ''
-        site.update_(hy=hy, sz=sz, b=b, l=l, hz=hz, gp=gp, az=az, mods=mods)
+        site.update_(hy=hy, sz=sz, b=b, l=l, hz=hz, gp=gp, a=a, z=z, mods=mods)
 
-        az_limit = l * LK / AZK
+        l_pre_mods = l
         while tokens:
             token = tokens.pop(0)
             for c in token:
@@ -61,17 +64,20 @@ with open('late.data', 'r') as f:
 
                 if c == 'a': # aerobrake cancelled landing burn
                     l -= 1
-                    az = 1
+                    a = 1
                     mods += 'A'
+                    site.a = a
                 if c =='z': # extra hazard on aerobrake path
-                    az += 1
+                    z += 1
                     mods += 'Z'
+                    site.z = z
                 if c in 'az':
-                    site.az = az
                     site.mods = mods
 
-        az = min(az, az_limit)
-        r = sqrt(sz + gp) / sqrt((6 - hy) * (b + 1 + LK * l + AZK * az))
+        # select between direct landing burns or aerobrake path
+        la = min(l * LK + a * AK + z * ZK, l_pre_mods * LK)
+
+        r = sqrt(sz + gp) / sqrt((6 - hy) * (1 + b + hz * ZK + la))
         n = int(10 * r)
 
         site.r = r
