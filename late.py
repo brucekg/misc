@@ -1,6 +1,8 @@
 from math import sqrt
 from aobj import AObj
 
+# Burn Factor
+BK = 1
 # Landing Burn Factor
 LK = 3
 # Aerobrake
