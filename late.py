@@ -2,11 +2,13 @@ from math import sqrt
 from aobj import AObj
 
 # Landing Burn Factor
-LK = 4
+LK = 3
 # Aerobrake
 AK = 2
 # Hazard Factor
 ZK = 4
+#Group Prospect Factor
+GPK = .5
 
 def print_list(li):
     for s in li:
@@ -77,8 +79,8 @@ with open('late.data', 'r') as f:
         # select between direct landing burns or aerobrake path
         la = min(l * LK + a * AK + z * ZK, l_pre_mods * LK)
 
-        r = sqrt(sz + gp) / sqrt((6 - hy) * (1 + b + hz * ZK + la))
-        n = int(10 * r)
+        r = sqrt(sz + gp * GPK) / sqrt((6 - hy) * ((1 + b) * BK + hz * ZK + la))
+        n = int(10 * r + .5)
 
         site.r = r
         site.n = n
