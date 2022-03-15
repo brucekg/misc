@@ -2,11 +2,11 @@ from math import sqrt
 from aobj import AObj
 
 # Burn Factor
-BK = 2
+BK = 1
 # Landing Burn Factor
-LK = 4
+LK = 3
 # Aerobrake
-AK = 3
+AK = 2
 # Hazard Factor
 ZK = 4
 #Group Prospect Factor
@@ -95,7 +95,8 @@ with open('late.data', 'r') as f:
         site.update_(hy=hy, sz=sz, b=bb, path=(path or '').upper(), delta=delta, mods=mods, gp=gp, c=c)
 
         r = (sz + gp * GPK) / ((5 - hy) * (bb * BK + delta))
-        n = int(10 * r + .5)
+        r = sqrt(r)
+        n = int(6 * r + .5)
 
         site.r = r
         site.n = n
