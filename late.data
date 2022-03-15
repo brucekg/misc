@@ -48,8 +48,8 @@ mars/aria.mons 3 6 3 l/a p
 mars/hellas.basin 4 6 3 l/az p
 mars/north.pole 4 6 4 l/a p
 menoetius 3 2 5
-merc1 3 6 5 l p
-merc2 0 6 5 l p
+mercury/north.pole 3 6 5 l p
+mercury/discovery.. 0 6 5 l p
 miahelena 1 2 4 g
 gefion 0 2 4 g
 minerva 3 3 4 g
