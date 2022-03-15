@@ -2,20 +2,22 @@ from math import sqrt
 from aobj import AObj
 
 # Burn Factor
-BK = 1
+BK = 2
 # Landing Burn Factor
-LK = 3
+LK = 4
 # Aerobrake
-AK = 2
+AK = 3
 # Hazard Factor
 ZK = 4
 #Group Prospect Factor
 GPK = .5
+#Comet Factor
+CK = 4
 
 def print_list(li):
     for s in li:
-        print(f'{s.name:12s} {s.mods:5s} {s.r:7.3f}   n = {s.n:2d} ><'
-              f'  hy= {s.hy:1.0f}  sz= {s.sz:1.0f}  b= {s.b:2.0f}   l= {s.l:.1f}   hz= {s.hz:1.0f}')
+        print(f'{s.name:20s} {s.mods:5s} {s.r:7.3f}   n = {s.n:2d} ><'
+              f'  hy= {s.hy:1.0f}  sz= {s.sz:1.0f}  b= {s.b:2.0f}   path= {s.path}')
     print('\n=============================\n')
     return
 
@@ -31,57 +33,68 @@ with open('late.data', 'r') as f:
         site = AObj()
         name = tokens.pop(0)
         site.name = name
-        values = list()
-        while tokens:
-            token = tokens[0]
-            if token.strip('0') == '.5':
-                values.append(.5)
-            elif token.isdigit():
-                values.append(float(token))
-            else:
-                break
-            tokens.pop(0)
-        while len(values) < 5:
-            values.append(0.0)
 
-        hy, sz, b, l, hz = values
+        # hydration
+        hy = int(tokens.pop(0))
+
+        # size (max. 6)
+        sz = int(tokens.pop(0))
+
+        # burns base (before alternative paths)
+        bb = int(tokens.pop(0))
+
+        #TODO: comets
+        c = 0
+
         gp = 0
-        a = 0
-        z = 0
-        mods = ''
-        site.update_(hy=hy, sz=sz, b=b, l=l, hz=hz, gp=gp, a=a, z=z, mods=mods)
 
-        l_pre_mods = l
+        path = None
+        delta = 0
+
+        mods = ''
+
         while tokens:
             token = tokens.pop(0)
-            for c in token:
-                if c in 'gp':
-                    assert gp == 0, f'GP error in line: {line}'
-                    if c == 'g':
-                        gp = 2 # group
-                        mods += 'G'
-                    if c == 'p':
-                        gp = 1 # prospect
-                        mods += 'P'
-                    site.gp = gp
-                    site.mods = mods
 
-                if c == 'a': # aerobrake cancelled landing burn
-                    l -= 1
-                    a = 1
-                    mods += 'A'
-                    site.a = a
-                if c =='z': # extra hazard on aerobrake path
-                    z += 1
-                    mods += 'Z'
-                    site.z = z
-                if c in 'az':
-                    site.mods = mods
+            if token in ('gp'):
+                mods += token.upper()
+                gp = 1
+                continue
 
-        # select between direct landing burns or aerobrake path
-        la = min(l * LK + a * AK + z * ZK, l_pre_mods * LK)
+            if token == 'c':
+                mods += token.upper()
+                c += 1
+                continue
 
-        r = sqrt(sz + gp * GPK) / sqrt((6 - hy) * ((1 + b) * BK + hz * ZK + la))
+            paths = token.split('/')
+            while paths:
+                apath = paths.pop(0)
+                b = 0
+                l = 0.0
+                a = 0
+                z = 0
+                for char in apath:
+                    if char == 'b':
+                        b += 1
+                    elif char == 'l':
+                        l += 1.0
+                    elif char == 'h':
+                        l += 0.5
+                    elif char == 'a':
+                        a += 1
+                    elif char == 'a':
+                        a += 1
+                    elif char == 'z':
+                        z += 1
+                adelta = b * BK + l * LK + a * AK + z * ZK
+                if (path is None) or (adelta < delta):
+                    path = apath
+                    delta = adelta
+
+
+        site.update_(hy=hy, sz=sz, b=bb, path=(path or '').upper(), delta=delta, mods=mods, gp=gp, c=c)
+
+        r = (sz + gp * GPK) / ((5 - hy) * (bb * BK + delta))
         n = int(10 * r + .5)
 
         site.r = r
