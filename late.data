@@ -27,7 +27,7 @@ ganymede 4 6 8 lz p
 gaspra 0 1 3 g
 glaukos 3 1 4
 hathor 1 1 3 z
-hektor 3 3 5 z
+hektor 3 3 5 gz
 hertha 3 3 3 g
 himalia 2 4 4 g
 hygeia 3 5 3 g
@@ -66,7 +66,7 @@ phoebe 4 3 6 g
 polana 1 2 3 g
 psyche 1 5 3 z
 saturn 0 6 14 llza/llzll
-skamandrios 3 1 5
+skamandrios.moonlet 3 1 5 g
 telamon 2 3 4 g
 tithonus 2 1 4
 unitas 1 4 4 g
