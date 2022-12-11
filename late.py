@@ -15,7 +15,12 @@ GPK = .5
 CK = 4
 
 def print_list(li):
+    i = 0
     for s in li:
+        i += 1
+        if i >= 5:
+            i = 0
+            print()
         print(f'{s.name:20s} {s.mods:3s} {s.r:2.3f}  n= {s.n:2d}  '
               f'  hy= {s.hy:1.0f}  sz= {s.sz:1.0f}  b= {s.b:2.0f} {s.path}')
     print('\n=============================\n')
