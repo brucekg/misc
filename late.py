@@ -1,5 +1,5 @@
 from math import sqrt
-from aobj import AObj
+from trad.aobj import AObj
 
 # Burn Factor
 BK = 1
