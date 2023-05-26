@@ -1,6 +1,6 @@
 import json
 
-from object_methods import get_dict
+from .object_methods import get_dict
 
 
 class AObj(object):
