@@ -21,10 +21,11 @@ def print_list(li):
         if i >= 5:
             i = 0
             print()
-        print(f'{s.name:20s} {s.mods:3s} {s.r:2.3f}  n= {s.n:2d}  '
+        print(f'{s.name:20s} {s.mods:3s} {s.r:2.3f}  n= {s.n:2d}/{s.n2:2d}  '
               f'  hy= {s.hy:1.0f}  sz= {s.sz:1.0f}  b= {s.b:2.0f} {s.path}')
     print('\n=============================\n')
     return
+
 
 with open('late.data', 'r') as f:
     site_list = list()
@@ -101,10 +102,13 @@ with open('late.data', 'r') as f:
 
         r = (sz + gp * GPK) / ((5 - hy) * (bb * BK + delta))
         r = sqrt(r)
-        n = int(6 * r + .5)
+        r1 = 90 * r
+        n = int(r1 / 12)
+        n2 = int(r1 - (12 * n))
 
         site.r = r
         site.n = n
+        site.n2 = n2
 
         site_list.append(site)
 
