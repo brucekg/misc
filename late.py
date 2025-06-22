@@ -102,9 +102,9 @@ with open('late.data', 'r') as f:
 
         r = (sz + gp * GPK) / ((5 - hy) * (bb * BK + delta))
         r = sqrt(r)
-        r1 = 90 * r
-        n = int(r1 / 12)
-        n2 = int(r1 - (12 * n))
+        r1 = 45 * r
+        n = int(r1 / 6)
+        n2 = int(r1 - (6 * n))
 
         site.r = r
         site.n = n
