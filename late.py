@@ -116,6 +116,8 @@ with open('late.data', 'r') as f:
 sorted_list = sorted(site_list, key=lambda e: e.name)
 print_list(sorted_list)
 
-#sorted_list = sorted(site_list, key=lambda e: e.r)
-#print_list(sorted_list)
+print(100*'-')
+
+sorted_list = sorted(site_list, key=lambda e: e.r)
+print_list(sorted_list)
 
