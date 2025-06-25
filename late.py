@@ -2,7 +2,7 @@ from math import sqrt
 from trad.aobj import AObj
 
 # Burn Factor
-BK = 1
+BK = 1.5
 # Landing Burn Factor
 LK = 3
 # Aerobrake
@@ -100,7 +100,7 @@ with open('late.data', 'r') as f:
 
         site.update_(hy=hy, sz=sz, b=bb, path=(path or '').upper(), delta=delta, mods=mods, gp=gp, c=c)
 
-        r = (sz + gp * GPK) / ((5 - hy) * (bb * BK + delta))
+        r = (min(sz,6) + gp * GPK) / ((5 - hy) * (bb + delta))
         r = sqrt(r)
         r1 = 45 * r
         n = int(r1 / 6)
