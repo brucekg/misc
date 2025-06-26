@@ -1,10 +1,36 @@
 from math import sqrt
-from trad.aobj import AObj
+
+import json
+from types import SimpleNamespace
+
+from trad.object_methods import update
+
+def json_to_objects(json_input):
+    """
+    Given a JSON string or list of dicts, return a list of objects with attributes
+    for each key (spaces in keys are replaced by underscores).
+    """
+    # If input is a string, parse it
+    if isinstance(json_input, str):
+        records = json.loads(json_input)
+    else:
+        records = json_input
+
+    objects = []
+
+    for record in records:
+        # Replace spaces in keys
+        clean_record = {k.replace(" ", "_"): v for k, v in record.items()}
+        # Create an object with attributes
+        obj = SimpleNamespace(**clean_record)
+        objects.append(obj)
+
+    return objects
 
 # Burn Factor
 BK = 1.5
 # Landing Burn Factor
-LK = 3
+LK = .5
 # Aerobrake
 AK = 2
 # Hazard Factor
@@ -21,103 +47,66 @@ def print_list(li):
         if i >= 5:
             i = 0
             print()
-        print(f'{s.name:20s} {s.mods:3s} {s.r:2.3f}  n= {s.n:2d}/{s.n2:2d}  '
-              f'  hy= {s.hy:1.0f}  sz= {s.sz:1.0f}  b= {s.b:2.0f} {s.path}')
+        print_site(s)
+
+
     print('\n=============================\n')
     return
 
-
-with open('late.data', 'r') as f:
-    site_list = list()
-    for line in f:
-        line = line.strip()
-        if not line or line.startswith('#'):
-            continue
-        tokens = line.split()
-        # print(tokens)
-
-        site = AObj()
-        name = tokens.pop(0)
-        site.name = name
-
-        # hydration
-        hy = int(tokens.pop(0))
-
-        # size (max. 6)
-        sz = int(tokens.pop(0))
-
-        # burns base (before alternative paths)
-        bb = int(tokens.pop(0))
-
-        #TODO: comets
-        c = 0
-
-        gp = 0
-
-        path = None
-        delta = 0
-
-        mods = ''
-
-        while tokens:
-            token = tokens.pop(0)
-
-            if token in ('gp'):
-                mods += token.upper()
-                gp = 1
-                continue
-
-            if token == 'c':
-                mods += token.upper()
-                c += 1
-                continue
-
-            paths = token.split('/')
-            while paths:
-                apath = paths.pop(0)
-                b = 0
-                l = 0.0
-                a = 0
-                z = 0
-                for char in apath:
-                    if char == 'b':
-                        b += 1
-                    elif char == 'l':
-                        l += 1.0
-                    elif char == 'h':
-                        l += 0.5
-                    elif char == 'a':
-                        a += 1
-                    elif char == 'a':
-                        a += 1
-                    elif char == 'z':
-                        z += 1
-                adelta = b * BK + l * LK + a * AK + z * ZK
-                if (path is None) or (adelta < delta):
-                    path = apath
-                    delta = adelta
+def print_site(s):
+    name = s.Site_Name
+    print(f'{name:40s} {s.r:2.3f}  n= {s.n:2d}/{s.n2:2d}  '
+          f'  hy= {s.Hydration:1.0f}  sz= {s.Size:1.0f}  b= {s.Burns:2.0f}')
+    return
 
 
-        site.update_(hy=hy, sz=sz, b=bb, path=(path or '').upper(), delta=delta, mods=mods, gp=gp, c=c)
+with open('high_frontier_sites.json', 'r') as f:
+    json_doc = f.read()
+sites = json_to_objects(json_doc)
 
-        r = (min(sz,6) + gp * GPK) / ((5 - hy) * (bb + delta))
-        r = sqrt(r)
-        r1 = 45 * r
-        n = int(r1 / 6)
-        n2 = int(r1 - (6 * n))
+for site in sites:
 
-        site.r = r
-        site.n = n
-        site.n2 = n2
+    hy = site.Hydration
+    sz = site.Size
+    bb = site.Burns
 
-        site_list.append(site)
+    a = site.Aerobrakes
+    if a is None:
+        a = 0
 
+    z = site.Crashes
+    if z is None:
+        z = 0
 
-sorted_list = sorted(site_list, key=lambda e: e.name)
+    if site.Synodic:
+        comet = 1
+    else:
+        comet = 0
+
+    if a > 0:
+        landing = 0
+    else:
+        landing = sz * LK
+
+    group = site.Group
+    gp = max(site.RaygunGroup, site.BuggyGroup)
+
+    print(json.dumps(site.__dict__, indent=4))
+    print(gp, bb, a, z, landing, comet)
+
+    r = (min(sz,6) + gp * GPK) / ((5 - hy) * (bb * BK + a * AK + z * ZK + landing))
+    r = sqrt(r)
+    r1 = 45 * r
+    n = int(r1 / 6)
+    n2 = int(r1 - (6 * n))
+
+    update(site,r=r,n=n,n2=n2)
+
+sorted_list = sorted(sites, key=lambda e: e.Site_Name)
 print_list(sorted_list)
 
 print(100*'-')
 
-sorted_list = sorted(site_list, key=lambda e: e.r)
+sorted_list = sorted(sites, key=lambda e: e.r)
 print_list(sorted_list)
 

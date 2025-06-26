@@ -71,3 +71,38 @@ def _get_dict_allow(key, block, only, private):
     # private keys are not allowed if private is False
     # any key that is prefixed with an underscore is private
     return private or not key.startswith('_')
+
+def update(given, *args, **kwargs):
+    """
+    This method updates the object attributes.  This is used by __init__.
+
+    :param args: an arg maybe an object, a dict, or a json string.
+    :param kwargs: a kwarg specifies the keyword and value of an attribute to be updated or initialized.
+    :return: nothing
+    """
+    for arg in args:
+        if arg is None:
+            pass
+        elif type(arg) is dict:
+            given.__dict__.update(arg)
+        elif type(arg) is str:
+            d = json.loads(arg)
+            given.__dict__.update(d)
+        else:
+            given.__dict__.update(arg.__dict__)
+    given.__dict__.update(**kwargs)
+    return
+
+def json(given, **kwargs):
+    """
+    This method produces a json string for the objects.
+
+    :param kwargs: passed to json.dumps() - example x.json_(indent=3) for pretty indented output
+    :return: json document string
+    """
+    j = json.dumps(given.__dict__, **kwargs)
+    return j
+
+def is_empty(given):
+    return len(given.__dict__) == 0
+
