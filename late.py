@@ -38,7 +38,7 @@ ZK = 4
 #Group Prospect Factor
 GPK = .5
 #Comet Factor
-CK = 4
+CK = 2
 
 def print_list(li):
     i = 0
@@ -56,7 +56,8 @@ def print_list(li):
 def print_site(s):
     name = s.Site_Name
     print(f'{name:40s} {s.r:2.3f}  n= {s.n:2d}/{s.n2:2d}  '
-          f'  hy= {s.Hydration:1.0f}  sz= {s.Size:1.0f}  b= {s.Burns:2.0f}')
+          f'  hy= {s.Hydration:1.0f}  sz= {s.Size:1.0f}  bb= {s.Burns:2.0f}'
+          f'     aero={s.a:1.0f} haz={s.z:1.0f} comet={s.c:1.0f}')
     return
 
 
@@ -80,8 +81,10 @@ for site in sites:
 
     if site.Synodic:
         comet = 1
+        cf = CK
     else:
         comet = 0
+        cf = 1
 
     if a > 0:
         landing = 0
@@ -94,13 +97,13 @@ for site in sites:
     # print(json.dumps(site.__dict__, indent=4))
     # print(gp, bb, a, z, landing, comet)
 
-    r = (min(sz,6) + gp * GPK)*(hy+1) / (5 * (bb * BK + a * AK + z * ZK + landing))
+    r = (min(sz,6) + gp * GPK)*(hy+1) / (5 * (bb * BK + a * AK + z * ZK + landing) * cf)
     r = sqrt(r)
     r1 = 45 * r
     n = int(r1 / 6)
     n2 = int(r1 - (6 * n))
 
-    update(site,r=r,n=n,n2=n2)
+    update(site,r=r,n=n,n2=n2,a=a,z=z,c=comet)
 
 sorted_list = sorted(sites, key=lambda e: e.Site_Name)
 print_list(sorted_list)
