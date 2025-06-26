@@ -91,8 +91,8 @@ for site in sites:
     group = site.Group
     gp = max(site.RaygunGroup, site.BuggyGroup)
 
-    print(json.dumps(site.__dict__, indent=4))
-    print(gp, bb, a, z, landing, comet)
+    # print(json.dumps(site.__dict__, indent=4))
+    # print(gp, bb, a, z, landing, comet)
 
     r = (min(sz,6) + gp * GPK) / ((5 - hy) * (bb * BK + a * AK + z * ZK + landing))
     r = sqrt(r)
