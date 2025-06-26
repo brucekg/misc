@@ -94,7 +94,7 @@ for site in sites:
     # print(json.dumps(site.__dict__, indent=4))
     # print(gp, bb, a, z, landing, comet)
 
-    r = (min(sz,6) + gp * GPK) / ((5 - hy) * (bb * BK + a * AK + z * ZK + landing))
+    r = (min(sz,6) + gp * GPK)*(hy+1) / (5 * (bb * BK + a * AK + z * ZK + landing))
     r = sqrt(r)
     r1 = 45 * r
     n = int(r1 / 6)
