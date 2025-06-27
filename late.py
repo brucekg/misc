@@ -45,9 +45,9 @@ def print_site(s):
     name = s.Site_Name
     if s.Group:
         name += f' / {s.Group}'
-    print(f'{name:40s} {s.r:2.3f}  n= {s.n:2d}/{s.n2:2d}  '
-          f'  hy= {s.Hydration:1.0f}  sz= {s.Size:1.0f}  bb= {s.Burns:2.0f}'
-          f'     aero={s.a:1.0f} haz={s.z:1.0f} comet={s.c:1.0f}  vf={s.vf:1.0f}  bf={s.bf:1.0f}')
+    print(f'{s.SolarZone:8s} {name:40s} {s.r:2.3f}  n= {s.n:2d}/{s.n2:2d}  '
+          f'  hy= {s.Hydration:1.0f}  sz= {s.Size:1.0f}  bb= {s.Burns:3.1f}'
+          f'     aero={s.a:1.0f} haz={s.z:1.0f} comet={s.c:1.0f}  vf={s.vf:1.1f}  bf={s.bf:1.1f}')
     return
 
 
@@ -55,10 +55,8 @@ def print_site(s):
 BK = 3
 # Landing Burn Factor
 LK = .5
-# Aerobrake
-AK = 5/6
-# Hazard Factor
-ZK = 5/6
+# Aerobrake Hazard Factor
+AZK = 5/6
 #Group Prospect Factor
 GPK = .2
 #Comet Factor
@@ -89,22 +87,31 @@ for site in sites:
         comet = 0
         cf = 1
 
+
+
     if a > 0:
         landing = 0
     else:
-        landing = sz * LK * BK
+        landing = sz * LK
+        if sz == 6:
+            landing += LK
+        elif sz > 6:
+            landing += 2*(sz - 6)*LK
 
     group = site.Group
     gp = max(site.RaygunGroup, site.BuggyGroup)
 
+    # risk
+    risk = 1 - (AZK**(a+z))
+
     # burn factor
-    # TODO: factor in risk of crash
     # TODO: factor in escape
-    bf = (bb * BK + landing)
+    bf = BK * (bb + landing) * (1 + risk)
 
     # value factor
     # todo: use hy as index
-    vf = (min(sz,6) + gp * GPK)*(AK**a)*(ZK**z)*((hy+1))
+    # todo: add push
+    vf = (min(sz,6) + gp * GPK)*((hy+1))/cf
 
 
     r = vf / (5 * bf * cf)
