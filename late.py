@@ -98,9 +98,12 @@ for site in sites:
     gp = max(site.RaygunGroup, site.BuggyGroup)
 
     # burn factor
+    # TODO: factor in risk of crash
+    # TODO: factor in escape
     bf = (bb * BK + landing)
 
     # value factor
+    # todo: use hy as index
     vf = (min(sz,6) + gp * GPK)*(AK**a)*(ZK**z)*((hy+1))
 
 
