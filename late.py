@@ -43,6 +43,8 @@ def print_list(li):
 
 def print_site(s):
     name = s.Site_Name
+    if s.Group:
+        name += f' / {s.Group}'
     print(f'{name:40s} {s.r:2.3f}  n= {s.n:2d}/{s.n2:2d}  '
           f'  hy= {s.Hydration:1.0f}  sz= {s.Size:1.0f}  bb= {s.Burns:2.0f}'
           f'     aero={s.a:1.0f} haz={s.z:1.0f} comet={s.c:1.0f}  vf={s.vf:1.0f}  bf={s.bf:1.0f}')
@@ -50,13 +52,13 @@ def print_site(s):
 
 
 # Burn Factor
-BK = 1.5
+BK = 2
 # Landing Burn Factor
 LK = .5
 # Aerobrake
-AK = 2
+AK = 1
 # Hazard Factor
-ZK = 4
+ZK = 2
 #Group Prospect Factor
 GPK = .5
 #Comet Factor
