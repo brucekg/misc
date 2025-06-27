@@ -27,18 +27,6 @@ def json_to_objects(json_input):
 
     return objects
 
-# Burn Factor
-BK = 1.5
-# Landing Burn Factor
-LK = .5
-# Aerobrake
-AK = 2
-# Hazard Factor
-ZK = 4
-#Group Prospect Factor
-GPK = .5
-#Comet Factor
-CK = 2
 
 def print_list(li):
     i = 0
@@ -60,6 +48,19 @@ def print_site(s):
           f'     aero={s.a:1.0f} haz={s.z:1.0f} comet={s.c:1.0f}  vf={s.vf:1.0f}  bf={s.bf:1.0f}')
     return
 
+
+# Burn Factor
+BK = 1.5
+# Landing Burn Factor
+LK = .5
+# Aerobrake
+AK = 2
+# Hazard Factor
+ZK = 4
+#Group Prospect Factor
+GPK = .5
+#Comet Factor
+CK = 2
 
 with open('high_frontier_sites.json', 'r') as f:
     json_doc = f.read()
@@ -98,7 +99,7 @@ for site in sites:
     bf = (bb * BK + a * AK + z * ZK + landing)**2
 
     # value factor
-    vf = (min(sz,6) + gp * GPK)*(hy+1)
+    vf = (min(sz,6) + gp * GPK)*((hy+1)**2)
 
 
     r = vf / (5 * bf * cf)
