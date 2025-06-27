@@ -56,11 +56,11 @@ BK = 2
 # Landing Burn Factor
 LK = .5
 # Aerobrake
-AK = 1
+AK = 2
 # Hazard Factor
 ZK = 2
 #Group Prospect Factor
-GPK = .5
+GPK = .2
 #Comet Factor
 CK = 2
 
@@ -98,10 +98,10 @@ for site in sites:
     gp = max(site.RaygunGroup, site.BuggyGroup)
 
     # burn factor
-    bf = (bb * BK + a * AK + z * ZK + landing)**2
+    bf = (bb * BK + a * AK + z * ZK + landing)
 
     # value factor
-    vf = (min(sz,6) + gp * GPK)*((hy+1)**2)
+    vf = (min(sz,6) + gp * GPK)*((hy+1))
 
 
     r = vf / (5 * bf * cf)
