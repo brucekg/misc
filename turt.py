@@ -1,4 +1,4 @@
-from symbol import return_stmt
+
 from turtle import *
 
 def pent():
