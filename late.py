@@ -52,13 +52,13 @@ def print_site(s):
 
 
 # Burn Factor
-BK = 2
+BK = 3
 # Landing Burn Factor
 LK = .5
 # Aerobrake
-AK = 2
+AK = 5/6
 # Hazard Factor
-ZK = 2
+ZK = 5/6
 #Group Prospect Factor
 GPK = .2
 #Comet Factor
@@ -98,10 +98,10 @@ for site in sites:
     gp = max(site.RaygunGroup, site.BuggyGroup)
 
     # burn factor
-    bf = (bb * BK + a * AK + z * ZK + landing)
+    bf = (bb * BK + landing)
 
     # value factor
-    vf = (min(sz,6) + gp * GPK)*((hy+1))
+    vf = (min(sz,6) + gp * GPK)*(AK**a)*(ZK**z)*((hy+1))
 
 
     r = vf / (5 * bf * cf)
