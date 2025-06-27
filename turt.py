@@ -12,3 +12,7 @@ def pent():
         forward(309)
         right(360 / 5)
     return
+
+pent()
+
+input('press enter')
