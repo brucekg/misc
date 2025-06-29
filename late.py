@@ -117,10 +117,8 @@ for site in sites:
         landing = 0
     else:
         landing = sz * LK
-        if sz == 6:
-            landing += LK
-        elif sz > 6:
-            landing += (sz - 6)*LK
+        if sz >= 6:
+            landing += (sz - 6)*LK + (1+int(sz/7)*BK)
 
     escape = sqrt(sz+1) * EK
 
