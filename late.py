@@ -71,10 +71,19 @@ ZTF = {
     'Earth': 1,
     'Mars': 2,
     'Ceres': 3,
-    'Jupiter': 4,
-    'Saturn': 5,
-    'Uranus': 6,
-    'Neptune': 7,
+    'Jupiter': 5,
+    'Saturn': 8,
+    'Uranus': 14,
+    'Neptune': 20,
+}
+
+# Hydration Value Factor
+HVF = {
+    0: 1,
+    1: 5,
+    2: 20,
+    3: 40,
+    4: 70
 }
 
 with open('high_frontier_sites.json', 'r') as f:
@@ -96,10 +105,10 @@ for site in sites:
         z = 0
 
     if site.Synodic:
-        comet = 1
+        synodic = 1
         cf = CK
     else:
-        comet = 0
+        synodic = 0
         cf = 1
 
 
@@ -122,15 +131,14 @@ for site in sites:
     risk = 1 - (AZK**(a+z))
 
     # burn factor
-    bf = BK * (bb + landing) * (1 + risk)
+    bf = BK * (bb**1.5 + landing) * (1 + risk)
 
     # time factor
     tf = ZTF[site.SolarZone]
 
     # value factor
-    # todo: use hy as index
     # todo: add push
-    vf = (min(sz,6) + gp * GPK)*((hy+1)**2)/(escape*cf)
+    vf = (min(sz,6) + gp * GPK)*(HVF[hy])/(escape*cf*((z+1)*AZK))
 
 
     r = vf / (tf * bf * cf)
@@ -139,7 +147,7 @@ for site in sites:
     n = int(r1 / 6)
     n2 = int(r1 - (6 * n))
 
-    update(site,r=r,n=n,n2=n2,a=a,z=z,vf=vf,bf=bf,landing=landing,escape=escape,c=comet,tf=tf)
+    update(site, r=r, n=n, n2=n2, a=a, z=z, vf=vf, bf=bf, landing=landing, escape=escape, c=synodic, tf=tf)
 
 sorted_list = sorted(sites, key=lambda e: e.Site_Name)
 print_list(sorted_list)
