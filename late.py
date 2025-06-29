@@ -46,21 +46,36 @@ def print_site(s):
     if s.Group:
         name += f' / {s.Group}'
     print(f'{s.SolarZone:8s} {name:40s} {s.r:2.3f}  n= {s.n:2d}/{s.n2:2d}  '
-          f'  hy= {s.Hydration:1.0f}  sz= {s.Size:1.0f}  bb= {s.Burns:3.1f}'
-          f'     aero={s.a:1.0f} haz={s.z:1.0f} comet={s.c:1.0f}  vf={s.vf:1.1f}  bf={s.bf:1.1f}')
+          f'  hy= {s.Hydration:1.0f}  sz= {s.Size:1.0f}  bb= {s.Burns:3.1f}  landing={s.landing} escape={s.escape:3.1f} '
+          f'     aero={s.a:1.0f} haz={s.z:1.0f} comet={s.c:1.0f}  vf={s.vf:1.1f}  bf={s.bf:1.1f} tf={s.tf}')
     return
 
 
 # Burn Factor
 BK = 3
 # Landing Burn Factor
-LK = .5
+LK = 1
+# Escape Factor
+EK = 2
 # Aerobrake Hazard Factor
 AZK = 5/6
 #Group Prospect Factor
 GPK = .2
 #Comet Factor
 CK = 2
+
+# Zone Time Factor
+ZTF = {
+    'Mercury': 3,
+    'Venus': 2,
+    'Earth': 1,
+    'Mars': 2,
+    'Ceres': 3,
+    'Jupiter': 4,
+    'Saturn': 5,
+    'Uranus': 6,
+    'Neptune': 7,
+}
 
 with open('high_frontier_sites.json', 'r') as f:
     json_doc = f.read()
@@ -96,7 +111,9 @@ for site in sites:
         if sz == 6:
             landing += LK
         elif sz > 6:
-            landing += 2*(sz - 6)*LK
+            landing += (sz - 6)*LK
+
+    escape = sqrt(sz+1) * EK
 
     group = site.Group
     gp = max(site.RaygunGroup, site.BuggyGroup)
@@ -105,22 +122,24 @@ for site in sites:
     risk = 1 - (AZK**(a+z))
 
     # burn factor
-    # TODO: factor in escape
     bf = BK * (bb + landing) * (1 + risk)
+
+    # time factor
+    tf = ZTF[site.SolarZone]
 
     # value factor
     # todo: use hy as index
     # todo: add push
-    vf = (min(sz,6) + gp * GPK)*((hy+1))/cf
+    vf = (min(sz,6) + gp * GPK)*((hy+1)**2)/(escape*cf)
 
 
-    r = vf / (5 * bf * cf)
+    r = vf / (tf * bf * cf)
     r = sqrt(r)
     r1 = 45 * r
     n = int(r1 / 6)
     n2 = int(r1 - (6 * n))
 
-    update(site,r=r,n=n,n2=n2,a=a,z=z,vf=vf,bf=bf,c=comet)
+    update(site,r=r,n=n,n2=n2,a=a,z=z,vf=vf,bf=bf,landing=landing,escape=escape,c=comet,tf=tf)
 
 sorted_list = sorted(sites, key=lambda e: e.Site_Name)
 print_list(sorted_list)
